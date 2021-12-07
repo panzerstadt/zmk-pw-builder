@@ -1,7 +1,7 @@
 FROM zmkfirmware/zmk-build-arm:2.5 as zmk-west
-WORKDIR /west
-COPY /west .
-RUN ["west", "init", "-l", "init"]
+WORKDIR /
+COPY /config /config
+RUN ["west", "init", "-l", "config"]
 RUN ["west", "update"]
 RUN ["west", "zephyr-export"]
 
@@ -18,8 +18,11 @@ RUN node --version
 RUN npm --version
 
 FROM zmk-node
-COPY --from=zmk-west /west/zmk/app /zmk/app
+COPY --from=zmk-west /zmk/app /zmk/app
 COPY . .
+WORKDIR /server
+RUN npm install
+WORKDIR /
 EXPOSE 8080
-CMD ["node", "index.js"]
+CMD ["node", "server/index.js"]
 # CMD ["west", "build", "-d", "/build/output", "-s", "zmk/app", "-b", "nice_nano_v2", "--", "-DSHIELD=corne_left", "-DZMK_CONFIG=/config"]

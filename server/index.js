@@ -42,6 +42,9 @@ const runBuildProcess = async (res) => {
                 })
 
             }
+            if (code === 1) {
+                throw new Error("the builder has encountered an error. please check API logs for more details.")
+            }
             // probably this one
         });
 
