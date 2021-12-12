@@ -1,20 +1,31 @@
-const { exec, spawn, execSync } = require("child_process");
+const { spawn, execSync } = require("child_process");
 const express = require('express');
+const fs = require("fs")
 const app = express();
 const port = process.env.PORT || 8080;
+
+const OUTPUT_PATH = "/build/output/zephyr/zmk.uf2"
 
 app.get('/', async (req, res) => {
     // receive json or keymap file here
     console.log("receiving these params")
     console.log(req.query)
-    await runBuildProcess(res);
+
+    await runBuildProcess(res, "bt60_v1", 'string');
+})
+
+app.get('/build', async (req, res) => {
+    // receive json or keymap file here
+    console.log("receiving these params")
+    console.log(req.query)
+    await runBuildProcess(res, "bt60_v1", 'file');
 })
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 })
 
-const runBuildProcess = async (res, board = "bt60_v1") => {
+const runBuildProcess = async (res, board = "bt60_v1", type = "file") => {
     return new Promise((resolve) => {
         const build = spawn("west", ["build", "-d /build/output", "-s /zmk/app", "-b " + board, "--", "-DZMK_CONFIG=/keymap-config"], { shell: true })
 
@@ -38,11 +49,32 @@ const runBuildProcess = async (res, board = "bt60_v1") => {
                 // grab uf2 and send it on express
                 const timestamp = Date.now()
                 const filename = `bt60_${timestamp}.uf2`
-                res.download("/build/output/zephyr/zmk.uf2", filename, (err) => {
-                    if (err) return console.warn(err);
-                    console.log(`${filename} has been sent!`);
-                    resolve();
-                })
+
+                if (type === 'file') {
+                    return res.download(OUTPUT_PATH, filename, (err) => {
+                        if (err) return console.warn(err);
+                        console.log(`${filename} has been sent!`);
+                        resolve();
+                    })
+                }
+
+                if (type === 'string') {
+                    const filepath = OUTPUT_PATH
+                    const stat = fs.statSync(filepath)
+
+                    res.writeHead(200, {
+                        "Content-Type": "application/octet-stream",
+                        "Content-length": stat.size
+                    })
+
+                    const readStream = fs.createReadStream(filepath)
+                    readStream.pipe(res).on('close', (err) => {
+                        if (err) return console.warn(err);
+                        console.log(`${filename} has been sent!`);
+                        resolve();
+                    })
+                }
+
 
             }
             if (code === 1) {
