@@ -9,8 +9,8 @@ const port = process.env.PORT || 8080;
 
 const WHITELIST = [
     "http://localhost:3000",
-    "https://polarity-works-lp-panzerstadt.vercel.app/",
-    "https://polarity-works-lp.vercel.app/"
+    "https://polarity-works-lp-panzerstadt.vercel.app",
+    "https://polarity-works-lp.vercel.app"
 ]
 
 app.use(cors({
