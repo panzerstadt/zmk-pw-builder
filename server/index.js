@@ -1,39 +1,56 @@
 const { spawn, execSync } = require("child_process");
 const express = require('express');
+const cors = require("cors")
 const fs = require("fs")
 const app = express();
 const port = process.env.PORT || 8080;
 
-const OUTPUT_PATH = "/build/output/zephyr/zmk.uf2"
 
+
+const CORS_URLS = [
+    "http://localhost:3000",
+    "https://polarity-works-lp-panzerstadt.vercel.app/",
+    "https://polarity-works-lp.vercel.app/"
+]
+
+app.use(cors({
+    origin: CORS_URLS
+}))
 app.get('/', async (req, res) => {
     // receive json or keymap file here
-    console.log("receiving these params")
-    console.log(req.query)
 
-    await runBuildProcess(res, "bt60_v1", 'string');
+
+    await runBuildProcess(req, res, "bt60_v1", 'string');
 })
 
 app.get('/build', async (req, res) => {
     // receive json or keymap file here
     console.log("receiving these params")
     console.log(req.query)
-    await runBuildProcess(res, "bt60_v1", 'file');
+    await runBuildProcess(req, res, "bt60_v1", 'file');
 })
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 })
 
-const runBuildProcess = async (res, board = "bt60_v1", type = "file") => {
+const runBuildProcess = async (req, res, board = "bt60_v1", type = "file") => {
+    const timestamp = Date.now()
+    const outputDir = `/build/output_${timestamp}`
+    const outputPath = outputDir + "/zephyr/zmk.uf2"
+
+    console.log("receiving these params")
+    console.log(req.query)
+    console.log("output directory: ", outputDir)
+
     return new Promise((resolve) => {
-        const build = spawn("west", ["build", "-d /build/output", "-s /zmk/app", "-b " + board, "--", "-DZMK_CONFIG=/keymap-config"], { shell: true })
+        const build = spawn("west", ["build", "-d " + outputDir, "-s /zmk/app", "-b " + board, "--", "-DZMK_CONFIG=/keymap-config"], { shell: true })
 
         build.on("close", code => {
             console.log(`child process exited with code ${code}`);
             if (code === 0) {
                 // log 'ls for checking
-                execSync("cd /build/output/zephyr && ls", (error, stdout, stderr) => {
+                execSync(`cd ${outputDir}/zephyr && ls`, (error, stdout, stderr) => {
                     if (error) {
                         console.log(`error: ${error.message}`);
                         return;
@@ -51,7 +68,7 @@ const runBuildProcess = async (res, board = "bt60_v1", type = "file") => {
                 const filename = `bt60_${timestamp}.uf2`
 
                 if (type === 'file') {
-                    return res.download(OUTPUT_PATH, filename, (err) => {
+                    return res.download(outputPath, filename, (err) => {
                         if (err) return console.warn(err);
                         console.log(`${filename} has been sent!`);
                         resolve();
@@ -59,7 +76,7 @@ const runBuildProcess = async (res, board = "bt60_v1", type = "file") => {
                 }
 
                 if (type === 'string') {
-                    const filepath = OUTPUT_PATH
+                    const filepath = outputPath
                     const stat = fs.statSync(filepath)
 
                     res.writeHead(200, {
