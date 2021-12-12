@@ -7,14 +7,20 @@ const port = process.env.PORT || 8080;
 
 
 
-const CORS_URLS = [
+const WHITELIST = [
     "http://localhost:3000",
     "https://polarity-works-lp-panzerstadt.vercel.app/",
     "https://polarity-works-lp.vercel.app/"
 ]
 
 app.use(cors({
-    origin: CORS_URLS
+    origin: function (origin, callback) {
+        if (WHITELIST.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not allowed by CORS"))
+        }
+    }
 }))
 app.get('/', async (req, res) => {
     // receive json or keymap file here
