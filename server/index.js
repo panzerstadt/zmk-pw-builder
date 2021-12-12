@@ -5,6 +5,8 @@ const port = process.env.PORT || 8080;
 
 app.get('/', async (req, res) => {
     // receive json or keymap file here
+    console.log("receiving these params")
+    console.log(req.query)
     await runBuildProcess(res);
 })
 
@@ -12,9 +14,9 @@ app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 })
 
-const runBuildProcess = async (res) => {
+const runBuildProcess = async (res, board = "bt60_v1") => {
     return new Promise((resolve) => {
-        const build = spawn("west", ["build", "-d /build/output", "-s /zmk/app", "-b nice_nano_v2", "--", "-DSHIELD=corne_left", "-DZMK_CONFIG=/keymap-config"], { shell: true })
+        const build = spawn("west", ["build", "-d /build/output", "-s /zmk/app", "-b " + board, "--", "-DZMK_CONFIG=/keymap-config"], { shell: true })
 
         build.on("close", code => {
             console.log(`child process exited with code ${code}`);
@@ -34,7 +36,8 @@ const runBuildProcess = async (res) => {
                 });
 
                 // grab uf2 and send it on express
-                const filename = "bt60_20211207.uf2"
+                const timestamp = Date.now()
+                const filename = `bt60_${timestamp}.uf2`
                 res.download("/build/output/zephyr/zmk.uf2", filename, (err) => {
                     if (err) return console.warn(err);
                     console.log(`${filename} has been sent!`);
