@@ -5,6 +5,21 @@ const fs = require("fs")
 const app = express();
 const port = process.env.PORT || 8080;
 
+const execute = (command) => {
+    return execSync(command, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);  // < --the uf2 should be hereeeee
+        // under the name zmk.uf2
+    });
+}
+
 
 
 const WHITELIST = [
@@ -18,18 +33,16 @@ app.use(cors({
         if (WHITELIST.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
-            callback(new Error("Not allowed by CORS"))
+            callback(new Error(`${origin} is Not allowed by CORS`))
         }
     }
 }))
-app.get('/', async (req, res) => {
-    // receive json or keymap file here
-
-
+app.use(express.json())
+app.post('/', async (req, res) => {
     await runBuildProcess(req, res, "bt60_v1", 'string');
 })
 
-app.get('/build', async (req, res) => {
+app.post('/build', async (req, res) => {
     // receive json or keymap file here
     console.log("receiving these params")
     console.log(req.query)
@@ -42,32 +55,30 @@ app.listen(port, () => {
 
 const runBuildProcess = async (req, res, board = "bt60_v1", type = "file") => {
     const timestamp = Date.now()
-    const outputDir = `/build/output_${timestamp}`
-    const outputPath = outputDir + "/zephyr/zmk.uf2"
+    const inputDir = `/keymap-config_${timestamp}`
+    const outputDir = `/build_${timestamp}`
+    const outputPath = outputDir + "/output/zephyr/zmk.uf2"
 
-    console.log("receiving these params")
-    console.log(req.query)
-    console.log("output directory: ", outputDir)
+    const keymapAsString = req.body.keymapAsString
 
+    execute(`mkdir ${inputDir}`)
+    fs.writeFileSync(`${inputDir}/bt60.keymap`, keymapAsString, (err) => {
+        if (err) {
+            return console.warn(err)
+        }
+        console.log(`created file ${inputDir}/bt60.keymap`)
+    })
+
+
+    // FIXME: don't forget to delete the input and output dirs when done
     return new Promise((resolve) => {
-        const build = spawn("west", ["build", "-d " + outputDir, "-s /zmk/app", "-b " + board, "--", "-DZMK_CONFIG=/keymap-config"], { shell: true })
+        const build = spawn("west", ["build", "-d " + `${outputDir}/output`, "-s /zmk/app", "-b " + board, "--", "-DZMK_CONFIG=" + inputDir], { shell: true })
 
         build.on("close", code => {
             console.log(`child process exited with code ${code}`);
             if (code === 0) {
                 // log 'ls for checking
-                execSync(`cd ${outputDir}/zephyr && ls`, (error, stdout, stderr) => {
-                    if (error) {
-                        console.log(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        console.log(`stderr: ${stderr}`);
-                        return;
-                    }
-                    console.log(`stdout: ${stdout}`);  // < --the uf2 should be hereeeee
-                    // under the name zmk.uf2
-                });
+                execute(`cd ${outputDir}/output/zephyr && ls`)
 
                 // grab uf2 and send it on express
                 const timestamp = Date.now()
@@ -94,6 +105,10 @@ const runBuildProcess = async (req, res, board = "bt60_v1", type = "file") => {
                     readStream.pipe(res).on('close', (err) => {
                         if (err) return console.warn(err);
                         console.log(`${filename} has been sent!`);
+
+                        // cleanup
+                        execute(`rm -rf ${inputDir}`)
+                        execute(`rm -rf ${outputDir}`)
                         resolve();
                     })
                 }

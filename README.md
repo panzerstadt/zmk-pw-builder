@@ -1,11 +1,16 @@
 # local test run
 
 docker build -t zmknode .
-docker run -p 8080:8080 zmknode
+docker run -p 8080:8080 --name zmkbuilder zmknode
 
+
+# local enter docker and see see
+docker exec -it zmkbuilder bash
+
+# local stop
 
 docker ps
-docket stop <id>
+docker stop zmkbuilder
 
 
 run the above commands
