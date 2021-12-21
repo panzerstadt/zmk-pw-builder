@@ -33,6 +33,10 @@ app.use(cors({
         if (WHITELIST.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
+            if (origin === undefined) {
+                callback(new Error("this API is not meant to be accessed from the browser. please request from the associated Frontend service."))
+            }
+
             callback(new Error(`${origin} is Not allowed by CORS`))
         }
     }
