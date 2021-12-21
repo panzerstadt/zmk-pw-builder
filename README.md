@@ -11,6 +11,7 @@ docker exec -it zmkbuilder bash
 
 docker ps
 docker stop zmkbuilder
+docker rm zmkbuilder
 
 
 run the above commands
