@@ -23,9 +23,10 @@ const execute = (command) => {
 
 
 const WHITELIST = [
-    "http://localhost:3000",
-    "https://polarity-works-lp-panzerstadt.vercel.app",
-    "https://polarity-works-lp.vercel.app"
+    "http://localhost:3000", // local version of polarity works site
+    "http://localhost:8080", // keymap-editor from branch dev/local
+    "https://polarity-works-lp-panzerstadt.vercel.app", // stg
+    "https://polarity-works-lp.vercel.app" // prod
 ]
 
 app.use(cors({
