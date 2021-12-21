@@ -51,7 +51,11 @@ app.post('/build', async (req, res) => {
     // receive json or keymap file here
     console.log("receiving these params")
     console.log(req.query)
-    await runBuildProcess(req, res, "bt60_v1", 'file');
+    await runBuildProcess(req, res, "bt60_v1", 'file').catch(err => {
+        console.log("Build Process encountered an error.")
+        console.log(err)
+        res.status(500).send(err)
+    });
 })
 
 app.listen(port, () => {
@@ -121,6 +125,10 @@ const runBuildProcess = async (req, res, board = "bt60_v1", type = "file") => {
 
             }
             if (code === 1) {
+                // cleanup
+                execute(`rm -rf ${inputDir}`)
+                execute(`rm -rf ${outputDir}`)
+                resolve();
                 throw new Error("the builder has encountered an error. please check API logs for more details.")
             }
             // probably this one
