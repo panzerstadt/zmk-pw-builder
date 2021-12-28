@@ -17,8 +17,7 @@ const execute = (command) => {
             console.log(`stderr: ${stderr}`);
             return;
         }
-        console.log(`stdout: ${stdout}`);  // < --the uf2 should be hereeeee
-        // under the name zmk.uf2
+        console.log(`stdout: ${stdout}`);
     });
 }
 
@@ -78,26 +77,24 @@ const runBuildProcess = async (req, res, type = "file") => {
     if (boardName === null) throw new Error(`requested board not found. you asked for: ${req.board.keyboardId}`)
 
     const boardId = req.body.keyboardId
-    const boardConfigDir = "/board-config/" + boardId + "/"
+    const boardConfigDir = "/board-config/" + boardId + "/config/boards"
 
     console.log(`building: ${JSON.stringify({ boardId, boardName, boardConfigDir }, null, 2)}`)
 
     // make a working folder
     execute(`mkdir ${inputDir}`)
     // turn incoming keymap into file
-    fs.writeFileSync(`${inputDir}/polarityworks-bt.keymap`, keymapAsString, (err) => {
-        if (err) {
-            return console.warn(err)
-        }
-        console.log(`created file ${inputDir}/polarityworks-bt.keymap`)
+    fs.writeFileSync(`${inputDir}/${boardName}.keymap`, keymapAsString, (err) => {
+        if (err) console.warn(err)
     })
-    // copy over the configs for the board
-    execute(`cp -vr ${boardConfigDir} ${inputDir}/`)
-    // log 'ls for checking
-    execute(`cd ${inputDir}/ && ls`)
+    console.log(`created file ${inputDir}/${boardName}.keymap`)
 
+    // copy over the configs for the board
+    console.log(`copying over board config with command: cp -vr ${boardConfigDir} ${inputDir}/`)
+    execute(`cp -vr ${boardConfigDir} ${inputDir}/`)
 
     // run west
+    console.log(`running west build: west build -d ${outputDir}/output -s /zmk/app -b ${boardName} -- -DZMK-CONFIG=${inputDir}`)
     // FIXME: don't forget to delete the input and output dirs when done
     return new Promise((resolve) => {
         const build = spawn("west", ["build", "-d " + `${outputDir}/output`, "-s /zmk/app", "-b " + boardName, "--", "-DZMK_CONFIG=" + inputDir], { shell: true })
