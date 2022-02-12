@@ -56,19 +56,28 @@ from root directory
 
 cd board-config/bt60v1_1u
 
-bt60v1_1u/  
-bt60v1_iso/  
-bt60v2_ansi/  
-bt65v1_1u/  
-bt65v1_tsangan/  
-bt75v1_iso/
-bt60v1_ansi/  
-bt60v1_tsangan/  
-bt60v2_iso/  
-bt65v1_ansi/  
-bt75v1_1u/  
-bt60v1_hotswap/  
-bt60v2_1u/  
-bt60v2_tsangan/  
-bt65v1_iso/  
-bt75v1_ansi/
+echo "pulling bt60 v1"
+cd board-config/bt60v1_1u && git pull origin bt60v1-all1U && cd ../..
+cd board-config/bt60v1_iso && git pull origin bt60v1-ISO && cd ../..
+cd board-config/bt60v1_hotswap && git pull origin bt60v1-hotswap && cd ../..
+cd board-config/bt60v1_ansi && git pull origin bt60v1-ANSI && cd ../..
+cd board-config/bt60v1_tsangan && git pull origin bt60v1-tsangan && cd ../..
+
+echo "pulling bt60 v2"
+cd board-config/bt60v2_ansi && git pull origin bt60v2-ANSI && cd ../..
+cd board-config/bt60v2_iso && git pull origin bt60v2-ISO && cd ../..
+cd board-config/bt60v2_1u && git pull origin bt60v2-all1U && cd ../..
+cd board-config/bt60v2_tsangan && git pull origin bt60v2-tsangan && cd ../..
+
+echo "pulling bt65 v1"
+cd board-config/bt65v1_1u && git pull origin bt65-all1U && cd ../..
+cd board-config/bt65v1_tsangan && git pull origin bt65-tsangan && cd ../..
+cd board-config/bt65v1_ansi && git pull origin bt65-ANSI && cd ../..
+cd board-config/bt65v1_iso && git pull origin bt65-ISO && cd ../..
+
+echo "pulling bt75 v1"
+cd board-config/bt75v1_iso && git pull origin bt75-ISO && cd ../..
+cd board-config/bt75v1_1u && git pull origin bt75-all1U && cd ../..
+cd board-config/bt75v1_ansi && git pull origin bt75-ANSI && cd ../..
+
+echo "all boards have been updated to their latest HEAD"
