@@ -1,0 +1,64 @@
+[submodule "board-config/bt60v1_1u"]
+	path = board-config/bt60v1_1u
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v1-all1U
+[submodule "board-config/bt60v1_ansi"]
+	path = board-config/bt60v1_ansi
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v1-ANSI
+[submodule "board-config/bt60v1_hotswap"]
+	path = board-config/bt60v1_hotswap
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v1-hotswap
+[submodule "board-config/bt60v1_iso"]
+	path = board-config/bt60v1_iso
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v1-ISO
+[submodule "board-config/bt60v1_tsangan"]
+	path = board-config/bt60v1_tsangan
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v1-tsangan
+[submodule "board-config/bt60v2_1u"]
+	path = board-config/bt60v2_1u
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v2-all1U
+[submodule "board-config/bt60v2_ansi"]
+	path = board-config/bt60v2_ansi
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v2-ANSI
+[submodule "board-config/bt60v2_iso"]
+	path = board-config/bt60v2_iso
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v2-ISO
+[submodule "board-config/bt60v2_tsangan"]
+	path = board-config/bt60v2_tsangan
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt60v2-tsangan
+[submodule "board-config/bt65v1_1u"]
+	path = board-config/bt65v1_1u
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt65-all1U
+[submodule "board-config/bt65v1_ansi"]
+	path = board-config/bt65v1_ansi
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt65-ANSI
+[submodule "board-config/bt65v1_iso"]
+	path = board-config/bt65v1_iso
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt65-ISO
+[submodule "board-config/bt65v1_tsangan"]
+	path = board-config/bt65v1_tsangan
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt65-tsangan
+[submodule "board-config/bt75v1_1u"]
+	path = board-config/bt75v1_1u
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt75-all1U
+[submodule "board-config/bt75v1_ansi"]
+	path = board-config/bt75v1_ansi
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt75-ANSI
+[submodule "board-config/bt75v1_iso"]
+	path = board-config/bt75v1_iso
+	url = https://github.com/PolarityWorks/editor-zmk-config.git
+	branch = bt75-ISO
