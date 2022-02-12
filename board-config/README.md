@@ -49,3 +49,26 @@ git submodule add https://github.com/PolarityWorks/editor-zmk-config.git ./board
 
 then go to .gitmodules and add all the right branch names
 finally, `git submodule update --remote`
+
+# update all branches
+
+from root directory
+
+cd board-config/bt60v1_1u
+
+bt60v1_1u/  
+bt60v1_iso/  
+bt60v2_ansi/  
+bt65v1_1u/  
+bt65v1_tsangan/  
+bt75v1_iso/
+bt60v1_ansi/  
+bt60v1_tsangan/  
+bt60v2_iso/  
+bt65v1_ansi/  
+bt75v1_1u/  
+bt60v1_hotswap/  
+bt60v2_1u/  
+bt60v2_tsangan/  
+bt65v1_iso/  
+bt75v1_ansi/
