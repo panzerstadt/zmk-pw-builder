@@ -53,11 +53,13 @@ FROM docker-zmk
 
 CMD ["west", "build", "-d", "/build/output", "-s", "zmk/app", "-b", "nice_nano_v2", "--", "-DSHIELD=corne_left", "-DZMK_CONFIG=/config"]
 
-# this is for bt60 only so
+# ref
 
-# the below builds bt60 to build/output folder, using /config's files.
+### this is for bt60 only so
 
-# config files will be supplied by the frontend
+#### the below builds bt60 to build/output folder, using /config's files.
+
+#### config files will be supplied by the frontend
 
 west build -d /build/output -s zmk/app -b bt60 -- -DZMK_CONFIG=/config
 
