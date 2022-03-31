@@ -1,1 +1,0 @@
-when adding a board dir, update server\mapper.js -> getBoard
