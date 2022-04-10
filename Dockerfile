@@ -1,4 +1,4 @@
-FROM zmkfirmware/zmk-build-arm:2.5 as zmk-west
+FROM zmkfirmware/zmk-build-arm:stable as zmk-west
 WORKDIR /
 COPY /config /config
 RUN ["west", "init", "-l", "config"]
