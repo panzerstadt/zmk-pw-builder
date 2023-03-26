@@ -1,3 +1,9 @@
+# init from new git pull
+
+```bash
+git submodule update --init --recursive
+```
+
 # to add a branch from ckp
 
 `git submodule add https://github.com/PolarityWorks/editor-zmk-config.git ./board-config/<keyboard folder name, must be valid dir>`
