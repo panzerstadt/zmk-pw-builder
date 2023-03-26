@@ -1,5 +1,9 @@
 
-# Dockerfile for the ZMK firmware
+# This dockerfile essentially:
+# gets the latest zmk, installs west and zephyr
+# piles node on top of that
+# then runs a node server using the built zmk
+
 # Stage 1: Install west and zephyr.
 FROM zmkfirmware/zmk-build-arm:stable as zmk-west
 WORKDIR /
