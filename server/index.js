@@ -82,7 +82,7 @@ const runBuildProcess = async (req, res, type = "file") => {
     throw new Error(`requested board not found. you asked for: ${req.board.keyboardId}`);
 
   const boardId = req.body.keyboardId;
-  const boardConfigDir = "/board-config/" + boardId + "/config/boards";
+  const boardConfigDir = `/board-config/${boardId}/config/boards`;
 
   console.log(`building: ${JSON.stringify({ boardId, boardName, boardConfigDir }, null, 2)}`);
 
@@ -102,17 +102,17 @@ const runBuildProcess = async (req, res, type = "file") => {
   console.log(
     `running west build: west build -d ${outputDir}/output -s /zmk/app -b ${boardName} -- -DZMK-CONFIG=${inputDir}`
   );
-  // FIXME: don't forget to delete the input and output dirs when done
+
   return new Promise((resolve) => {
     const build = spawn(
       "west",
       [
         "build",
-        "-d " + `-d ${outputDir}/output`,
+        `-d ${outputDir}/output`,
         "-s /zmk/app",
-        "-b " + boardName,
+        `-b ${boardName}`,
         "--",
-        "-DZMK_CONFIG=" + inputDir,
+        `-DZMK_CONFIG=${inputDir}`,
       ],
       { shell: true }
     );
